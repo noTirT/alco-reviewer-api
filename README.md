@@ -1,5 +1,13 @@
 # Alco Reviewer API
 
+## Environment Variables
+
+- `PG_HOST`: Host URL of the postgres database
+- `PG_PORT`: Port of the postgres database on the host
+- `PG_USER`: Username to log into the postgres database
+- `PG_PASSWORD`: Password to log into the postgres database
+- `PG_DATABASE`: Database used in the project
+
 ## Run locally
 
 ### Using ngrok
