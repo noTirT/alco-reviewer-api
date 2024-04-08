@@ -1,3 +1,8 @@
-To test the app with the golang backend:
-- run `lt --port 8080` in the terminal
-- enter the returned url as the url for requests in the frontend
+# Alco Reviewer API
+
+## Run locally
+
+### Using ngrok
+
+- Run `ngrok http http://localhost:8080` to enable tunneling for your backend
+- The API can be called through the URL provided in the output of the command
