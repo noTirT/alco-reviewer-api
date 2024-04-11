@@ -1,13 +1,16 @@
-CREATE OR REPLACE FUNCTION trigger_set_timestamp()
-RETURNS TRIGGER AS $$
+create or replace function trigger_set_timestamp()
+returns trigger
+as $$
 BEGIN
     NEW.updated_at = NOW();
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$
+language plpgsql
+;
 
 CREATE TABLE IF NOT EXISTS users (
-    id int generated always as identity,
+    id uuid DEFAULT gen_random_uuid(),
     email varchar not null unique,
     username varchar not null unique,
     password varchar not null unique,
@@ -18,7 +21,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS drinks (
-    id int generated always as identity,
+    id uuid DEFAULT gen_random_uuid(),
     name varchar not null,
     alcohol boolean not null,
     created_at timestamptz not null default now(),
@@ -26,20 +29,20 @@ CREATE TABLE IF NOT EXISTS drinks (
     primary key(id)
     );
 
-    CREATE TABLE IF NOT EXISTS locations (
-        id int generated always as identity,
-        name varchar not null,
-        type varchar not null,
-        address varchar not null,
-        city varchar not null,
-        zip_code varchar not null,
-        created_at timestamptz not null default now(),
-        updated_at timestamptz not null default now(),
-        primary key(id)
-        );
+CREATE TABLE IF NOT EXISTS locations (
+    id uuid DEFAULT gen_random_uuid(),
+    name varchar not null,
+    type varchar not null,
+    address varchar not null,
+    city varchar not null,
+    zip_code varchar not null,
+    created_at timestamptz not null default now(),
+    updated_at timestamptz not null default now(),
+    primary key(id)
+    );
 
 CREATE TABLE IF NOT EXISTS reviews (
-    id int generated always as identity,
+        id uuid DEFAULT gen_random_uuid(),
     reviewer_id int not null,
     rating int not null,
     review_text text,
@@ -53,7 +56,6 @@ CREATE TABLE IF NOT EXISTS reviews (
     foreign key(location_id) references locations(id),
     constraint rating_range check (rating >= 1 and rating <= 5)
 );
-
 
 
 CREATE TABLE IF NOT EXISTS drinks_to_locations(
@@ -83,3 +85,4 @@ CREATE TRIGGER set_timestamp_locations
 BEFORE UPDATE ON locations
 FOR EACH ROW
     EXECUTE PROCEDURE trigger_set_timestamp();
+

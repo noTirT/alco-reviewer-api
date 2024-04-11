@@ -1,7 +1,14 @@
 package configs
 
 import (
+	"errors"
+	"fmt"
+	"noTirT/alcotracker/util"
+	"os"
+	"path"
 	"strings"
+	"syscall"
+	"time"
 
 	"github.com/spf13/viper"
 )
@@ -29,14 +36,20 @@ type Configuration struct {
 }
 
 func NewConfiguration() *Configuration {
+	workDir, err := os.Getwd()
+
+	if err != nil {
+		panic("Working directory could not be read")
+	}
+
 	viper.SetConfigFile(".env")
-	err := viper.ReadInConfig()
+	err = viper.ReadInConfig()
 
 	if err != nil {
 		panic(err)
 	}
 
-    viper.SetDefault("SERVER_PORT", ":8080")
+	viper.SetDefault("SERVER_PORT", ":8080")
 	viper.SetDefault("PG_HOST", "localhost")
 	viper.SetDefault("PG_PORT", 5432)
 	viper.SetDefault("PG_USER", "postgres")
@@ -48,7 +61,25 @@ func NewConfiguration() *Configuration {
 	viper.SetDefault("REFRESH_PRIVATE", "")
 	viper.SetDefault("REFRESH_PUBLIC", "")
 
-	viper.SetDefault("JWT_EXPIRATION", 30)
+	viper.SetDefault("JWT_EXPIRATION", 1)
+
+	for _, tokenType := range []string{"access", "refresh"} {
+		filePath := path.Join(workDir, fmt.Sprintf("/configs/%s-private.pem", tokenType))
+
+		fileInfo, err := os.Stat(filePath)
+		if errors.Is(err, os.ErrNotExist) {
+			util.GenerateRSAKeyPairs(tokenType)
+			continue
+		}
+
+		stat := fileInfo.Sys().(*syscall.Stat_t)
+		ctime := time.Unix(int64(stat.Ctim.Sec), int64(stat.Ctim.Nsec))
+
+		if ctime.Before(time.Now().AddDate(0, 0, -14)) {
+			util.GenerateRSAKeyPairs(tokenType)
+			continue
+		}
+	}
 
 	accessPrivate := CleanRSAKey(viper.GetString("ACCESS_PRIVATE"))
 	accessPublic := CleanRSAKey(viper.GetString("ACCESS_PUBLIC"))

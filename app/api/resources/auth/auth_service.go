@@ -6,8 +6,8 @@ import (
 	"log"
 	"time"
 
+	"noTirT/alcotracker/app/api/shared"
 	"noTirT/alcotracker/configs"
-    "noTirT/alcotracker/app/api/shared"
 	"noTirT/alcotracker/util"
 
 	"github.com/dgrijalva/jwt-go"
@@ -101,7 +101,7 @@ func (service *authService) GenerateAccessToken(user *shared.User) (string, erro
 		},
 	}
 
-	privateKey := util.PrivateRSAFromFile("auth")
+	privateKey := util.PrivateRSAFromFile("access")
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
 
 	return token.SignedString(privateKey)
@@ -129,10 +129,10 @@ func (service *authService) GenerateRefreshToken(user *shared.User) (string, err
 func (service *authService) ValidateAccessToken(tokenString string) (string, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &AccessTokenCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
-			log.Println("Unexpected signing method in auth token")
-			return nil, errors.New("Unexpected signing method in auth token")
+			log.Println("Unexpected signing method in access token")
+			return nil, errors.New("Unexpected signing method in access token")
 		}
-		return util.PublicRSAFromFile("auth"), nil
+		return util.PublicRSAFromFile("access"), nil
 	})
 
 	if err != nil {
@@ -142,7 +142,7 @@ func (service *authService) ValidateAccessToken(tokenString string) (string, err
 
 	claims, ok := token.Claims.(*AccessTokenCustomClaims)
 	if !ok || !token.Valid || claims.UserID == "" || claims.KeyType != "access" {
-		return "", errors.New("invalid token: authentication failed")
+		return "", errors.New("Invalid token: authentication failed")
 	}
 	return claims.UserID, nil
 }
