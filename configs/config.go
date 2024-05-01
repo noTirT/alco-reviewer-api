@@ -61,7 +61,7 @@ func NewConfiguration() *Configuration {
 	viper.SetDefault("REFRESH_PRIVATE", "")
 	viper.SetDefault("REFRESH_PUBLIC", "")
 
-	viper.SetDefault("JWT_EXPIRATION", 1)
+	viper.SetDefault("JWT_EXPIRATION", 30)
 
 	for _, tokenType := range []string{"access", "refresh"} {
 		filePath := path.Join(workDir, fmt.Sprintf("/configs/%s-private.pem", tokenType))

@@ -52,7 +52,7 @@ func NewAuthService(repo AuthRepository, config *configs.Configuration) AuthServ
 
 func (service *authService) CreateUser(request *shared.User) (*shared.User, error) {
 	user, err := service.repo.CreateUser(&shared.User{
-		Id:        0,
+		Id:        "",
 		Email:     request.Email,
 		Username:  request.Username,
 		Password:  request.Password,

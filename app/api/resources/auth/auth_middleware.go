@@ -40,15 +40,15 @@ func (ah *authHandler) MiddlewareValidateUserInfo(next http.Handler) http.Handle
 		userObj := &shared.User{}
 
 		err := util.FromJSON(userObj, r.Body)
-        if shared.HandleParseError(err, w){
-            return
-        }
+		if shared.HandleParseError(err, w) {
+			return
+		}
 
 		errs := ah.validator.Validate(userObj)
 		if len(errs) != 0 {
 			log.Println("Validation of user json failed", errs)
 			w.WriteHeader(http.StatusBadRequest)
-            util.ToJSON(&shared.GenericResponse{Status: false, Message: strings.Join(errs.Errors(), ","), StatusCode: 1}, w)
+			util.ToJSON(&shared.GenericResponse{Status: false, Message: strings.Join(errs.Errors(), ","), StatusCode: 1}, w)
 			return
 		}
 
@@ -100,15 +100,15 @@ func (ah *authHandler) MiddlewareValidateRefreshToken(next http.Handler) http.Ha
 		if err != nil {
 			log.Println("invalid token: wrong ID while parsing", err)
 			w.WriteHeader(http.StatusBadRequest)
-            util.ToJSON(&shared.GenericResponse{Status: false, Message: "Unable to fetch corresponding user", StatusCode: 3}, w)
+			util.ToJSON(&shared.GenericResponse{Status: false, Message: "Unable to fetch corresponding user", StatusCode: 3}, w)
 			return
 		}
 
-		actualCustomKey := util.GenerateCustomKey(fmt.Sprintf("%d", userObj.Id), userObj.TokenHash)
+		actualCustomKey := util.GenerateCustomKey(fmt.Sprintf("%s", userObj.Id), userObj.TokenHash)
 		if customKey != actualCustomKey {
 			log.Println("wrong token: authentication failed")
 			w.WriteHeader(http.StatusBadRequest)
-            util.ToJSON(&shared.GenericResponse{Status: false, Message: "Authentication failed. Invalid token", StatusCode: 4}, w)
+			util.ToJSON(&shared.GenericResponse{Status: false, Message: "Authentication failed. Invalid token", StatusCode: 4}, w)
 			return
 		}
 

@@ -43,11 +43,11 @@ CREATE TABLE IF NOT EXISTS locations (
 
 CREATE TABLE IF NOT EXISTS reviews (
         id uuid DEFAULT gen_random_uuid(),
-    reviewer_id int not null,
+    reviewer_id uuid not null,
     rating int not null,
     review_text text,
-    drink_id int not null,
-    location_id int not null,
+    drink_id uuid not null,
+    location_id uuid not null,
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now(),
     primary key(id),
@@ -59,8 +59,8 @@ CREATE TABLE IF NOT EXISTS reviews (
 
 
 CREATE TABLE IF NOT EXISTS drinks_to_locations(
-    drink_id int not null,
-    location_id int not null,
+    drink_id uuid not null,
+    location_id uuid not null,
     primary key(drink_id, location_id),
     foreign key(drink_id) references drinks(id),
     foreign key(location_id) references locations(id)

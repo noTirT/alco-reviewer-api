@@ -1,0 +1,25 @@
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env.docker
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/tom/Code/alcohol-app/backend/data/postgres:/var/lib/postgresql/data
+      - /home/tom/Code/alcohol-app/backend/configs/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_DB=${PG_DATABASE}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PG_USER}"]
+      interval: 5s
+      retries: 5
