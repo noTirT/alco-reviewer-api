@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/joho/godotenv"
-    _ "github.com/lib/pq"
+	_ "github.com/lib/pq"
 	"os"
 )
 

@@ -85,6 +85,7 @@ func (ah *authHandler) MiddlewareValidateRefreshToken(next http.Handler) http.Ha
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		UseCORS(w)
+		log.Println("Refreshing token")
 
 		token, err := extractToken(r)
 		if cancel := shared.HandleTokenParseError(err, w); cancel {

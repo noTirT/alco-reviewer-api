@@ -9,6 +9,7 @@ import (
 type LocationsController interface {
 	CreateLocation(w http.ResponseWriter, r *http.Request)
 	GetLocationsByDrinkId(w http.ResponseWriter, r *http.Request)
+	GetAllLocations(w http.ResponseWriter, r *http.Request)
 }
 
 type locationsController struct {
@@ -21,17 +22,28 @@ func NewLocationsController(service LocationsService) LocationsController {
 	}
 }
 
-func (controller *locationsController) GetLocationsByDrinkId(w http.ResponseWriter, r *http.Request) {
+func (controller *locationsController) GetAllLocations(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	request := &LocationsByDrinkRequest{}
-	err := util.FromJSON(request, r.Body)
+	locations, err := controller.service.GetAllLocations()
 
-	if cancel := shared.HandleParseError(err, w); cancel {
+	if shared.HandleGetError(err, w) {
 		return
 	}
 
-	locations, err := controller.service.GetLocationsByDrinkId(request)
+	w.WriteHeader(http.StatusOK)
+	util.ToJSON(&shared.GenericResponse{
+		Status:  true,
+		Message: "Locations retrieved successfully",
+		Data:    locations,
+	}, w)
+}
+
+func (controller *locationsController) GetLocationsByDrinkId(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	drinkId := r.PathValue("drinkId")
+
+	locations, err := controller.service.GetLocationsByDrinkId(drinkId)
 
 	if cancel := shared.HandleGetError(err, w); cancel {
 		return

@@ -6,13 +6,9 @@ import (
 )
 
 func AddRoutes(router *http.ServeMux, controller DrinksController, middleware auth.AuthHandler) {
-	drinksRouter := http.NewServeMux()
-
 	createDrinkHandler := http.HandlerFunc(controller.CreateDrink)
 	getDrinksByLocationHandler := http.HandlerFunc(controller.GetDrinksByLocationId)
 
-	drinksRouter.Handle("POST /", createDrinkHandler)
-	drinksRouter.Handle("GET /drink-by-location", getDrinksByLocationHandler)
-
-	router.Handle("/drinks/", http.StripPrefix("/drinks", middleware.MiddlewareValidateAccessToken(drinksRouter)))
+	router.Handle("POST /drinks", middleware.MiddlewareValidateAccessToken(createDrinkHandler))
+	router.Handle("GET /drinks/{locationId}", middleware.MiddlewareValidateAccessToken(getDrinksByLocationHandler))
 }

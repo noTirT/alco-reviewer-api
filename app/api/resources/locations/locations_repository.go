@@ -9,6 +9,7 @@ type LocationsRepository interface {
 	CreateLocation(location *Location) error
 	GetLocationsByDrinkId(drinkId string) ([]Location, error)
 	GetLocationById(locationId string) (*Location, error)
+	GetAllLocations() ([]Location, error)
 }
 
 type locationsRepository struct {
@@ -19,6 +20,18 @@ func NewLocationsRepository(db *db.PostgresDB) LocationsRepository {
 	return &locationsRepository{
 		db: db,
 	}
+}
+
+func (repo *locationsRepository) GetAllLocations() ([]Location, error) {
+	rows, err := repo.db.Db.Query("SELECT * FROM locations")
+	if err != nil {
+		return nil, err
+	}
+
+	var locations []Location
+	err = scan.Rows(&locations, rows)
+
+	return locations, err
 }
 
 func (repo *locationsRepository) CreateLocation(location *Location) error {

@@ -24,14 +24,9 @@ func NewDrinksController(service DrinksService) DrinksController {
 func (controller *drinksController) GetDrinksByLocationId(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	request := &DrinksByLocationRequest{}
-	err := util.FromJSON(request, r.Body)
+	locationId := r.PathValue("locationId")
 
-	if cancel := shared.HandleParseError(err, w); cancel {
-		return
-	}
-
-	drinks, err := controller.service.GetDrinksByLocationId(request)
+	drinks, err := controller.service.GetDrinksByLocationId(locationId)
 
 	if cancel := shared.HandleGetError(err, w); cancel {
 		return

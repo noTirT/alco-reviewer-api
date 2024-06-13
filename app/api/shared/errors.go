@@ -70,9 +70,9 @@ func HandleTokenValidationError(err error, w http.ResponseWriter) bool {
 	log.Println("token validation failed ", "error", err)
 	w.WriteHeader(http.StatusUnauthorized)
 	if strings.Contains(err.Error(), "token is expired") {
-        util.ToJSON(&GenericResponse{Status: false, Message: "Token expired", StatusCode: 1}, w)
-	}else{
-        util.ToJSON(&GenericResponse{Status: false, Message: "Invalid token", StatusCode: 2}, w)
-    }
+		util.ToJSON(&GenericResponse{Status: false, Message: "Token expired", StatusCode: 1}, w)
+	} else {
+		util.ToJSON(&GenericResponse{Status: false, Message: "Invalid token", StatusCode: 2}, w)
+	}
 	return true
 }

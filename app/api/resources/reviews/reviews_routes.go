@@ -6,13 +6,9 @@ import (
 )
 
 func AddRoutes(router *http.ServeMux, controller ReviewsController, middleware auth.AuthHandler) {
-    reviewsRouter := http.NewServeMux()
+	createReviewHandler := http.HandlerFunc(controller.CreateReview)
+	getReviewsHandler := http.HandlerFunc(controller.GetReviews)
 
-    createReviewHandler := http.HandlerFunc(controller.CreateReview)
-    getReviewsHandler := http.HandlerFunc(controller.GetReviews)
-
-    reviewsRouter.Handle("POST /", createReviewHandler)
-    reviewsRouter.Handle("GET /user", getReviewsHandler)
-
-    router.Handle("/reviews/", http.StripPrefix("/reviews", middleware.MiddlewareValidateAccessToken(reviewsRouter)))
+	router.Handle("POST /reviews", middleware.MiddlewareValidateAccessToken(createReviewHandler))
+	router.Handle("GET /reviews/user", middleware.MiddlewareValidateAccessToken(getReviewsHandler))
 }

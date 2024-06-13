@@ -5,14 +5,12 @@ import (
 	"noTirT/alcotracker/app/api/resources/auth"
 )
 
-func AddRoutes(router *http.ServeMux, controller LocationsController, middleware auth.AuthHandler){
-    locationsRouter := http.NewServeMux()
+func AddRoutes(router *http.ServeMux, controller LocationsController, middleware auth.AuthHandler) {
+	createLocationHandler := http.HandlerFunc(controller.CreateLocation)
+	getLocationsByDrinkHandler := http.HandlerFunc(controller.GetLocationsByDrinkId)
+	getAllLocationsHandler := http.HandlerFunc(controller.GetAllLocations)
 
-    createLocationHandler := http.HandlerFunc(controller.CreateLocation)
-    getLocationsByDrinkHandler := http.HandlerFunc(controller.GetLocationsByDrinkId)
-
-    locationsRouter.Handle("POST /", createLocationHandler)
-    locationsRouter.Handle("GET /location-by-drink", getLocationsByDrinkHandler)
-
-    router.Handle("/locations/", http.StripPrefix("/locations", middleware.MiddlewareValidateAccessToken(locationsRouter)))
+	router.Handle("POST /locations", middleware.MiddlewareValidateAccessToken(createLocationHandler))
+	router.Handle("GET /locations", middleware.MiddlewareValidateAccessToken(getAllLocationsHandler))
+	router.Handle("GET /locations/{drinkId}", middleware.MiddlewareValidateAccessToken(getLocationsByDrinkHandler))
 }

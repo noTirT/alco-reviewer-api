@@ -8,6 +8,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      ngrok:
+        condition: service_healthy
   db:
     image: postgres
     ports:
@@ -21,5 +23,23 @@ services:
       - POSTGRES_DB=${PG_DATABASE}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${PG_USER}"]
+      interval: 5s
+      retries: 5
+  ngrok:
+    image: ngrok/ngrok:latest
+    restart: unless-stopped
+    command:
+      - "start"
+      - "--config"
+      - "/etc/ngrok.yml"
+      - "--all"
+      - "--authtoken"
+      - "${NGROK_AUTH_TOKEN}"
+    volumes:
+      - ./configs/ngrok.yml:/etc/ngrok.yml
+    ports:
+      - 4040:4040
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4040"]
       interval: 5s
       retries: 5

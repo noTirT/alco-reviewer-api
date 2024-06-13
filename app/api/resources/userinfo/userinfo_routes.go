@@ -5,14 +5,10 @@ import (
 	"noTirT/alcotracker/app/api/resources/auth"
 )
 
-func AddRoutes(router *http.ServeMux, controller UserinfoController, middleware auth.AuthHandler){
-    userinfoRouter := http.NewServeMux()
+func AddRoutes(router *http.ServeMux, controller UserinfoController, middleware auth.AuthHandler) {
+	changeUsernameHandler := http.HandlerFunc(controller.ChangeUsername)
+	getProfileHandler := http.HandlerFunc(controller.GetUserProfile)
 
-    changeUsernameHandler := http.HandlerFunc(controller.ChangeUsername)
-    getProfileHandler := http.HandlerFunc(controller.GetUserProfile)
-
-    userinfoRouter.Handle("PUT /change-username", changeUsernameHandler)
-    userinfoRouter.Handle("GET /profile", getProfileHandler)
-
-    router.Handle("/userinfo/", http.StripPrefix("/userinfo", middleware.MiddlewareValidateAccessToken(userinfoRouter)))
+	router.Handle("PUT /userinfo/username", middleware.MiddlewareValidateAccessToken(changeUsernameHandler))
+	router.Handle("GET /userinfo", middleware.MiddlewareValidateAccessToken(getProfileHandler))
 }

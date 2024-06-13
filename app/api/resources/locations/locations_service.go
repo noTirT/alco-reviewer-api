@@ -4,7 +4,8 @@ import "time"
 
 type LocationsService interface {
 	CreateLocation(request *CreateLocationRequest) error
-    GetLocationsByDrinkId(request *LocationsByDrinkRequest) ([]Location, error)
+	GetLocationsByDrinkId(drinkId string) ([]Location, error)
+	GetAllLocations() ([]Location, error)
 }
 
 type locationsService struct {
@@ -15,6 +16,10 @@ func NewLocationsService(repo LocationsRepository) LocationsService {
 	return &locationsService{
 		repo: repo,
 	}
+}
+
+func (service *locationsService) GetAllLocations() ([]Location, error) {
+	return service.repo.GetAllLocations()
 }
 
 func (service *locationsService) CreateLocation(request *CreateLocationRequest) error {
@@ -32,6 +37,6 @@ func (service *locationsService) CreateLocation(request *CreateLocationRequest) 
 	return service.repo.CreateLocation(location)
 }
 
-func (service *locationsService) GetLocationsByDrinkId(request *LocationsByDrinkRequest) ([]Location, error) {
-    return service.repo.GetLocationsByDrinkId(request.DrinkId)
+func (service *locationsService) GetLocationsByDrinkId(drinkId string) ([]Location, error) {
+	return service.repo.GetLocationsByDrinkId(drinkId)
 }

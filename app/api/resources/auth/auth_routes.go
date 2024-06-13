@@ -5,15 +5,11 @@ import (
 )
 
 func AddRoutes(router *http.ServeMux, controller UserController, middleware AuthHandler) {
-    authRouter := http.NewServeMux()
+	signUpHandler := http.HandlerFunc(controller.SignUp)
+	signInHandler := http.HandlerFunc(controller.SignIn)
+	refreshHandler := http.HandlerFunc(controller.RefreshToken)
 
-    signUpHandler := http.HandlerFunc(controller.SignUp)
-    signInHandler := http.HandlerFunc(controller.SignIn)
-    refreshHandler := http.HandlerFunc(controller.RefreshToken)
-
-	authRouter.Handle("POST /signup", middleware.MiddlewareValidateUserInfo(signUpHandler))
-	authRouter.Handle("POST /signin", middleware.MiddlewareValidateUserInfo(signInHandler))
-    authRouter.Handle("GET /refresh", middleware.MiddlewareValidateRefreshToken(refreshHandler))
-
-    router.Handle("/auth/", http.StripPrefix("/auth", authRouter))
+	router.Handle("POST /auth/signup", middleware.MiddlewareValidateUserInfo(signUpHandler))
+	router.Handle("POST /auth/signin", middleware.MiddlewareValidateUserInfo(signInHandler))
+	router.Handle("GET /auth/refresh", middleware.MiddlewareValidateRefreshToken(refreshHandler))
 }

@@ -1,0 +1,6 @@
+version: "2"
+tunnels:
+  alcotracker:
+    proto: http
+    addr: web:8080
+    domain: randomly-verified-lab.ngrok-free.app
