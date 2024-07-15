@@ -22,6 +22,17 @@ func NewLocationsController(service LocationsService) LocationsController {
 	}
 }
 
+// GetAllLocations godoc
+//
+//	@Id				GetAllLocations
+//	@Summary		Get All Locations
+//	@Description	Get all Locations
+//	@Tags			Locations
+//	@Produce		json
+//	@Success		200	{object}	GenericResponse
+//	@Failure		500	{object}	GenericResponse	"Server or Database internal error"
+//	@Router			/locations [GET]
+//	@Security		Bearer
 func (controller *locationsController) GetAllLocations(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -39,6 +50,18 @@ func (controller *locationsController) GetAllLocations(w http.ResponseWriter, r 
 	}, w)
 }
 
+// GetLocationsByDrinkId godoc
+//
+//	@Id				GetLocationsByDrinkId
+//	@Summary		Get Locations by Drink ID
+//	@Description	Get locations by drink id
+//	@Tags			Locations
+//	@Produce		json
+//	@Param			drinkId	path		string	true "ID of drink"
+//	@Success		200		{object}	GenericResponse
+//	@Failure		500		{object}	GenericResponse	"Server or Database internal error"
+//	@Router			/locations/{drinkId} [GET]
+//	@Security		Bearer
 func (controller *locationsController) GetLocationsByDrinkId(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	drinkId := r.PathValue("drinkId")
@@ -57,6 +80,18 @@ func (controller *locationsController) GetLocationsByDrinkId(w http.ResponseWrit
 	}, w)
 }
 
+// CreateLocation godoc
+//
+//	@Id				CreateLocation
+//	@Summary		Create location
+//	@Description	Create new location
+//	@Tags			Locations
+//	@Produce		json
+//	@Param			LocationInfo	body		CreateLocationRequest	true "Location info"
+//	@Success		200				{object}	GenericResponse
+//	@Failure		500				{object}	GenericResponse	"Server or Database internal error"
+//	@Router			/locations [POST]
+//	@Security		Bearer
 func (controller *locationsController) CreateLocation(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 

@@ -8,8 +8,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      ngrok:
-        condition: service_healthy
   db:
     image: postgres
     ports:
@@ -39,7 +37,3 @@ services:
       - ./configs/ngrok.yml:/etc/ngrok.yml
     ports:
       - 4040:4040
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4040"]
-      interval: 5s
-      retries: 5

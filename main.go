@@ -7,14 +7,28 @@ import (
 	"noTirT/alcotracker/app/api/resources/drinks"
 	"noTirT/alcotracker/app/api/resources/locations"
 	"noTirT/alcotracker/app/api/resources/reviews"
-	"noTirT/alcotracker/app/api/resources/userinfo"
+	"noTirT/alcotracker/app/api/resources/user"
+	"noTirT/alcotracker/app/api/routes"
 	"noTirT/alcotracker/app/db"
 	"noTirT/alcotracker/configs"
+
+	"noTirT/alcotracker/docs"
 
 	"github.com/rs/cors"
 	//"noTirT/alcotracker/util"
 )
 
+//	@title			Alcotracker API
+//	@version		1.0
+//	@description	API for alcotracker backend
+//	@termsOfService	http://swagger.io/terms/
+
+//	@contact.name	Backend Dev
+//	@contact.email	tommanger55@gmail.com
+
+// @securityDefinitions.apiKey	Bearer
+// @in							header
+// @name						Authorization
 func main() {
 	//util.GenerateRSAKeyPairs("auth")
 	//util.GenerateRSAKeyPairs("refresh")
@@ -31,12 +45,14 @@ func main() {
 
 	fmt.Printf("Server starting at port %s\n", config.ServerPort)
 
+	docs.SwaggerInfo.Host = "localhost:8080"
+
 	router := http.NewServeMux()
 
 	database := db.InitPostgresDB()
 
 	endpoints := []func(*db.PostgresDB, *http.ServeMux, auth.AuthHandler){
-		userinfo.UserinfoInit,
+		user.UserInit,
 		reviews.ReviewsInit,
 		drinks.DrinksInit,
 		locations.LocationsInit,
@@ -46,6 +62,8 @@ func main() {
 	for _, endpoint := range endpoints {
 		endpoint(&database, router, middleware)
 	}
+
+	routes.SwaggerRoute(router)
 
 	server := http.Server{
 		Addr:    config.ServerPort,

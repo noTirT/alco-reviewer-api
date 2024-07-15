@@ -4,12 +4,12 @@ type UserSignupRequest struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
-}
+} //@Name UserSignupRequest
 
 type UserSigninRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
-}
+} //@Name UserSigninRequest
 
 type AuthResponse struct {
 	RefreshToken string `json:"refresh_token"`

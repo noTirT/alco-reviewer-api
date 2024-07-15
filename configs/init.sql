@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS users (
     email varchar not null unique,
     username varchar not null unique,
     password varchar not null unique,
+    follower_count int not null default 0,
+    following_count int not null default 0,
     tokenhash varchar(15) not null,
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now(),
@@ -64,6 +66,15 @@ CREATE TABLE IF NOT EXISTS drinks_to_locations(
     primary key(drink_id, location_id),
     foreign key(drink_id) references drinks(id),
     foreign key(location_id) references locations(id)
+);
+
+CREATE TABLE IF NOT EXISTS following(
+    follower_id uuid not null,
+    followed_id uuid not null,
+    created_at timestamptz not null default now(),
+    primary key(follower_id, followed_id),
+    foreign key(follower_id) references users(id),
+    foreign key(followed_id) references users(id)
 );
 
 CREATE TRIGGER set_timestamp_user

@@ -25,6 +25,17 @@ func NewAuthController(service AuthService) UserController {
 	}
 }
 
+// SignUp godoc
+//
+//	@Id				SignUp
+//	@Summary		Sign up
+//	@Description	Sign up new user
+//	@Tags			Auth
+//	@Produce		json
+//	@Param			user	body		UserSignupRequest	true	"User creation information"
+//	@Success		200		{object}	GenericResponse
+//	@Failure		500		{object}	GenericResponse	"Server or Database internal error"
+//	@Router			/auth/signup [POST]
 func (controller *userController) SignUp(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -55,6 +66,17 @@ func (controller *userController) SignUp(w http.ResponseWriter, r *http.Request)
 	util.ToJSON(&shared.GenericResponse{Status: true, Message: "shared.User created successfully."}, w)
 }
 
+// SignIn godoc
+//
+//	@Id				SignIn
+//	@Summary		Sign in
+//	@Description	Sign in user
+//	@Tags			Auth
+//	@Produce		json
+//	@Param			user	body		UserSigninRequest	true	"User login information"
+//	@Success		200		{object}	GenericResponse
+//	@Failure		500		{object}	GenericResponse	"Server or Database internal error"
+//	@Router			/auth/signin [POST]
 func (controller *userController) SignIn(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -100,6 +122,17 @@ func (controller *userController) SignIn(w http.ResponseWriter, r *http.Request)
 	}, w)
 }
 
+// RefreshToken godoc
+//
+//	@Id				RefreshToken
+//	@Summary		Refresh token
+//	@Description	Refresh access token
+//	@Tags			Auth
+//	@Produce		json
+//	@Param			Authorization	header		string	true	"Refresh token in format: Bearer <token>"
+//	@Success		200				{object}	GenericResponse
+//	@Failure		500				{object}	GenericResponse	"Server or Database internal error"
+//	@Router			/auth/refresh [GET]
 func (controller *userController) RefreshToken(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 

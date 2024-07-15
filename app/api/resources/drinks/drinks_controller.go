@@ -21,6 +21,18 @@ func NewDrinksController(service DrinksService) DrinksController {
 	}
 }
 
+// GetDrinksByLocationId godoc
+//
+//	@Id				GetDrinksByLocationID
+//	@Summary		Get Drinks By Location ID
+//	@Description	Get Drinks by Location ID
+//	@Tags			Drinks
+//	@Produce		json
+//	@Param			locationId	path		string	true "Id of location"
+//	@Success		200			{object}	GenericResponse
+//	@Failure		500			{object}	GenericResponse	"Server or Database internal error"
+//	@Router			/drinks/{locationId} [GET]
+//	@Security		Bearer
 func (controller *drinksController) GetDrinksByLocationId(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -40,6 +52,18 @@ func (controller *drinksController) GetDrinksByLocationId(w http.ResponseWriter,
 	}, w)
 }
 
+// CreateDrink godoc
+//
+//	@Id				CreateDrink
+//	@Summary		Create Drink
+//	@Description	Create new Drink
+//	@Tags			Drinks
+//	@Produce		json
+//	@Param			CreateDrinkRequest	body		CreateDrinkRequest	true "Drink info"
+//	@Success		200					{object}	GenericResponse
+//	@Failure		500					{object}	GenericResponse	"Server or Database internal error"
+//	@Router			/drinks [POST]
+//	@Security		Bearer
 func (controller *drinksController) CreateDrink(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
