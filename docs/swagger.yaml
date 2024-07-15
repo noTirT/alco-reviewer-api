@@ -1,0 +1,495 @@
+definitions:
+  GenericResponse:
+    properties:
+      data: {}
+      message:
+        type: string
+      status:
+        type: boolean
+      status_code:
+        type: integer
+    type: object
+  UserSigninRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  UserSignupRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  drinks.CreateDrinkRequest:
+    properties:
+      alcohol:
+        type: boolean
+      location_id:
+        type: string
+      name:
+        type: string
+    type: object
+  locations.CreateLocationRequest:
+    properties:
+      address:
+        type: string
+      city:
+        type: string
+      name:
+        type: string
+      type:
+        type: string
+      zip_code:
+        type: string
+    type: object
+  reviews.CreateReviewRequest:
+    properties:
+      drink_id:
+        type: string
+      location_id:
+        type: string
+      rating:
+        type: integer
+      review_text:
+        type: string
+      reviewer_id:
+        type: string
+    required:
+    - rating
+    - review_text
+    type: object
+  userinfo.FollowRequest:
+    properties:
+      to_follow_id:
+        type: string
+    type: object
+  userinfo.UsernameChangeRequest:
+    properties:
+      new_username:
+        type: string
+    type: object
+info:
+  contact:
+    email: tommanger55@gmail.com
+    name: Backend Dev
+  description: API for alcotracker backend
+  termsOfService: http://swagger.io/terms/
+  title: Alcotracker API
+  version: "1.0"
+paths:
+  /auth/refresh:
+    get:
+      description: Refresh access token
+      operationId: RefreshToken
+      parameters:
+      - description: 'Refresh token in format: Bearer <token>'
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      summary: Refresh token
+      tags:
+      - Auth
+  /auth/signin:
+    post:
+      description: Sign in user
+      operationId: SignIn
+      parameters:
+      - description: User login information
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/UserSigninRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      summary: Sign in
+      tags:
+      - Auth
+  /auth/signup:
+    post:
+      description: Sign up new user
+      operationId: SignUp
+      parameters:
+      - description: User creation information
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/UserSignupRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      summary: Sign up
+      tags:
+      - Auth
+  /drinks:
+    post:
+      description: Create new Drink
+      operationId: CreateDrink
+      parameters:
+      - description: Drink info
+        in: body
+        name: CreateDrinkRequest
+        required: true
+        schema:
+          $ref: '#/definitions/drinks.CreateDrinkRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      security:
+      - Bearer: []
+      summary: Create Drink
+      tags:
+      - Drinks
+  /drinks/{locationId}:
+    get:
+      description: Get Drinks by Location ID
+      operationId: GetDrinksByLocationID
+      parameters:
+      - description: Id of location
+        in: path
+        name: locationId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      security:
+      - Bearer: []
+      summary: Get Drinks By Location ID
+      tags:
+      - Drinks
+  /locations:
+    get:
+      description: Get all Locations
+      operationId: GetAllLocations
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      security:
+      - Bearer: []
+      summary: Get All Locations
+      tags:
+      - Locations
+    post:
+      description: Create new location
+      operationId: CreateLocation
+      parameters:
+      - description: Location info
+        in: body
+        name: LocationInfo
+        required: true
+        schema:
+          $ref: '#/definitions/locations.CreateLocationRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      security:
+      - Bearer: []
+      summary: Create location
+      tags:
+      - Locations
+  /locations/{drinkId}:
+    get:
+      description: Get locations by drink id
+      operationId: GetLocationsByDrinkId
+      parameters:
+      - description: ID of drink
+        in: path
+        name: drinkId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      security:
+      - Bearer: []
+      summary: Get Locations by Drink ID
+      tags:
+      - Locations
+  /reviews:
+    post:
+      description: Create new review
+      operationId: CreateReview
+      parameters:
+      - description: Review details
+        in: body
+        name: Review
+        required: true
+        schema:
+          $ref: '#/definitions/reviews.CreateReviewRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      security:
+      - Bearer: []
+      summary: Create Review
+      tags:
+      - Review
+  /reviews/feed:
+    get:
+      description: Get all Reviews made by friends of the current user sorted by time
+        and witha given offset for pagination
+      operationId: GetReviewsSortedWithOffset
+      parameters:
+      - description: Current offset representing the page
+        in: query
+        name: offset
+        required: true
+        type: integer
+      - description: How many reviews are included in one page
+        in: query
+        name: count
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      security:
+      - Bearer: []
+      summary: Get Reviews Sorted With Offset
+      tags:
+      - Review
+  /reviews/user:
+    get:
+      description: Get all Reviews made by current user
+      operationId: GetReviews
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      security:
+      - Bearer: []
+      summary: Get Reviews
+      tags:
+      - Review
+  /userinfo:
+    get:
+      description: Retrieve the profile of the current user
+      operationId: GetUserProfile
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      security:
+      - Bearer: []
+      summary: Get User Profile
+      tags:
+      - Userinfo
+  /userinfo/change-username:
+    put:
+      description: Update the username of current user
+      operationId: ChangeUsernamce
+      parameters:
+      - description: New username info
+        in: body
+        name: UsernameChangeRequest
+        required: true
+        schema:
+          $ref: '#/definitions/userinfo.UsernameChangeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      security:
+      - Bearer: []
+      summary: Change Username
+      tags:
+      - Userinfo
+  /userinfo/follow:
+    post:
+      description: Follow a user
+      operationId: FollowUser
+      parameters:
+      - description: Info about user to follow
+        in: body
+        name: FollowRequest
+        required: true
+        schema:
+          $ref: '#/definitions/userinfo.FollowRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      security:
+      - Bearer: []
+      summary: Follow User
+      tags:
+      - Userinfo
+  /userinfo/unfollow:
+    post:
+      description: Unfollow a user
+      operationId: UnfollowUser
+      parameters:
+      - description: Info about user to unfollow
+        in: body
+        name: FollowRequest
+        required: true
+        schema:
+          $ref: '#/definitions/userinfo.FollowRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      security:
+      - Bearer: []
+      summary: Unfollow User
+      tags:
+      - Userinfo
+  /userinfo/userprofile:
+    get:
+      description: Get the User with the given ID
+      operationId: GetUserById
+      parameters:
+      - description: ID of the user to retrieve
+        in: query
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      security:
+      - Bearer: []
+      summary: Get User By Id
+      tags:
+      - Userinfo
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
