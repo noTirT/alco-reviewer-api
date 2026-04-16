@@ -70,8 +70,8 @@ func (controller *userController) GetUserProfile(w http.ResponseWriter, r *http.
 //	@Tags			Userinfo
 //	@Produce		json
 //	@Param			userId	path		string	true	"ID of user to unfollow"
-//	@Success		200				{object}	GenericResponse
-//	@Failure		500				{object}	GenericResponse	"Server or Database internal error"
+//	@Success		200		{object}	GenericResponse
+//	@Failure		500		{object}	GenericResponse	"Server or Database internal error"
 //	@Router			/user/unfollow/{userId} [POST]
 //	@Security		Bearer
 func (controller *userController) UnfollowUser(w http.ResponseWriter, r *http.Request) {
@@ -101,8 +101,8 @@ func (controller *userController) UnfollowUser(w http.ResponseWriter, r *http.Re
 //	@Tags			Userinfo
 //	@Produce		json
 //	@Param			userId	path		string	true	"ID of user to follow"
-//	@Success		200				{object}	GenericResponse
-//	@Failure		500				{object}	GenericResponse	"Server or Database internal error"
+//	@Success		200		{object}	GenericResponse
+//	@Failure		500		{object}	GenericResponse	"Server or Database internal error"
 //	@Router			/user/follow/{userId} [POST]
 //	@Security		Bearer
 func (controller *userController) FollowUser(w http.ResponseWriter, r *http.Request) {

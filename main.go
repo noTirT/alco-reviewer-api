@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/rs/cors"
 	"net/http"
 	"noTirT/alcotracker/app/api/resources/auth"
 	"noTirT/alcotracker/app/api/resources/drinks"
@@ -11,11 +12,7 @@ import (
 	"noTirT/alcotracker/app/api/routes"
 	"noTirT/alcotracker/app/db"
 	"noTirT/alcotracker/configs"
-
 	"noTirT/alcotracker/docs"
-
-	"github.com/rs/cors"
-	//"noTirT/alcotracker/util"
 )
 
 //	@title			Alcotracker API
@@ -23,18 +20,14 @@ import (
 //	@description	API for alcotracker backend
 //	@termsOfService	http://swagger.io/terms/
 
-//	@contact.name	Backend Dev
+//	@contact.name Tom Manger
 //	@contact.email	tommanger55@gmail.com
 
 // @securityDefinitions.apiKey	Bearer
 // @in							header
 // @name						Authorization
 func main() {
-	//util.GenerateRSAKeyPairs("auth")
-	//util.GenerateRSAKeyPairs("refresh")
-
-	// reset tokenhash for users in a regular fashion
-	config := configs.NewConfiguration()
+	config := configs.NewConfiguration(".env")
 
 	cors := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
@@ -45,7 +38,7 @@ func main() {
 
 	fmt.Printf("Server starting at port %s\n", config.ServerPort)
 
-	docs.SwaggerInfo.Host = "localhost:8080"
+	docs.SwaggerInfo.Host = fmt.Sprintf("localhost%s", config.ServerPort)
 
 	router := http.NewServeMux()
 

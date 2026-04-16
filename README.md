@@ -14,13 +14,23 @@
 
 ## Environment Variables
 
-- `PG_HOST`: Host URL of the postgres database
-- `PG_PORT`: Port of the postgres database on the host
-- `PG_USER`: Username to log into the postgres database
-- `PG_PASSWORD`: Password to log into the postgres database
-- `PG_DATABASE`: Database used in the project
+| Variable           | Type   | Definition                           | Default     |
+| ------------------ | ------ | ------------------------------------ | ----------- |
+| SERVER_PORT        | String | Port the server runs on              | 8080        |
+| PG_HOST            | String | Postgres host                        | localhost   |
+| PG_PORT            | Number | Postgres port                        | 5432        |
+| PG_USER            | String | Postgres username                    | postgres    |
+| PG_PASSWORD        | String | Postgres password                    | password    |
+| PG_DATABASE        | String | Postgres database name               | alcohol-app |
+| JWT_EXPIRATION     | Number | JWT Token expiration time in minutes | 30          |
+| PEM_KEY_EXPIRATION | Number | RSA Key expiration time in days      | 14          |
 
 ## Run locally
+
+### Without ngrok
+
+- Run `sh scripts/start_docker_postgres.sh`
+- Run `go run main.go`
 
 ### Using ngrok
 
@@ -37,6 +47,7 @@
 
 - Run `docker compose up <-d>` to start the application
 
-## TODO
+### Rerun init.sql file on postgres in docker container
 
-- Better error detection and handling (not always expired when verification fails)
+- Enter cli of postgres container with `docker exec -it backend-db-1 /bin/bash`
+- `psql -U postgres -d alcohol-app -a -f "/docker-entrypoint-initdb.d/init.sql"`

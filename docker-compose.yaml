@@ -4,7 +4,9 @@ services:
     ports:
       - "8080:8080"
     env_file:
-      - .env.docker
+      - .env
+    environment:
+      - PG_HOST=backend-db-1
     depends_on:
       db:
         condition: service_healthy

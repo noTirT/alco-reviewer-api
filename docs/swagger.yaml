@@ -63,12 +63,7 @@ definitions:
     - rating
     - review_text
     type: object
-  userinfo.FollowRequest:
-    properties:
-      to_follow_id:
-        type: string
-    type: object
-  userinfo.UsernameChangeRequest:
+  user.UsernameChangeRequest:
     properties:
       new_username:
         type: string
@@ -76,7 +71,7 @@ definitions:
 info:
   contact:
     email: tommanger55@gmail.com
-    name: Backend Dev
+    name: Tom Manger
   description: API for alcotracker backend
   termsOfService: http://swagger.io/terms/
   title: Alcotracker API
@@ -360,114 +355,14 @@ paths:
       summary: Get Reviews
       tags:
       - Review
-  /userinfo:
+  /user/{userId}:
     get:
-      description: Retrieve the profile of the current user
-      operationId: GetUserProfile
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/GenericResponse'
-        "500":
-          description: Server or Database internal error
-          schema:
-            $ref: '#/definitions/GenericResponse'
-      security:
-      - Bearer: []
-      summary: Get User Profile
-      tags:
-      - Userinfo
-  /userinfo/change-username:
-    put:
-      description: Update the username of current user
-      operationId: ChangeUsernamce
-      parameters:
-      - description: New username info
-        in: body
-        name: UsernameChangeRequest
-        required: true
-        schema:
-          $ref: '#/definitions/userinfo.UsernameChangeRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/GenericResponse'
-        "500":
-          description: Server or Database internal error
-          schema:
-            $ref: '#/definitions/GenericResponse'
-      security:
-      - Bearer: []
-      summary: Change Username
-      tags:
-      - Userinfo
-  /userinfo/follow:
-    post:
-      description: Follow a user
-      operationId: FollowUser
-      parameters:
-      - description: Info about user to follow
-        in: body
-        name: FollowRequest
-        required: true
-        schema:
-          $ref: '#/definitions/userinfo.FollowRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/GenericResponse'
-        "500":
-          description: Server or Database internal error
-          schema:
-            $ref: '#/definitions/GenericResponse'
-      security:
-      - Bearer: []
-      summary: Follow User
-      tags:
-      - Userinfo
-  /userinfo/unfollow:
-    post:
-      description: Unfollow a user
-      operationId: UnfollowUser
-      parameters:
-      - description: Info about user to unfollow
-        in: body
-        name: FollowRequest
-        required: true
-        schema:
-          $ref: '#/definitions/userinfo.FollowRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/GenericResponse'
-        "500":
-          description: Server or Database internal error
-          schema:
-            $ref: '#/definitions/GenericResponse'
-      security:
-      - Bearer: []
-      summary: Unfollow User
-      tags:
-      - Userinfo
-  /userinfo/userprofile:
-    get:
-      description: Get the User with the given ID
+      description: Get the User with the given ID. If the ID is left empty, the currently
+        logged in user is retrieved instead
       operationId: GetUserById
       parameters:
       - description: ID of the user to retrieve
-        in: query
+        in: path
         name: userId
         required: true
         type: string
@@ -485,6 +380,85 @@ paths:
       security:
       - Bearer: []
       summary: Get User By Id
+      tags:
+      - Userinfo
+  /user/change-username:
+    put:
+      description: Update the username of current user
+      operationId: ChangeUsernamce
+      parameters:
+      - description: New username info
+        in: body
+        name: UsernameChangeRequest
+        required: true
+        schema:
+          $ref: '#/definitions/user.UsernameChangeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      security:
+      - Bearer: []
+      summary: Change Username
+      tags:
+      - Userinfo
+  /user/follow/{userId}:
+    post:
+      description: Follow a user
+      operationId: FollowUser
+      parameters:
+      - description: ID of user to follow
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      security:
+      - Bearer: []
+      summary: Follow User
+      tags:
+      - Userinfo
+  /user/unfollow/{userId}:
+    post:
+      description: Unfollow a user
+      operationId: UnfollowUser
+      parameters:
+      - description: ID of user to unfollow
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GenericResponse'
+        "500":
+          description: Server or Database internal error
+          schema:
+            $ref: '#/definitions/GenericResponse'
+      security:
+      - Bearer: []
+      summary: Unfollow User
       tags:
       - Userinfo
 securityDefinitions:

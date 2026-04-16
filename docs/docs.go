@@ -11,7 +11,7 @@ const docTemplate = `{
         "title": "{{.Title}}",
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
-            "name": "Backend Dev",
+            "name": "Tom Manger",
             "email": "tommanger55@gmail.com"
         },
         "version": "{{.Version}}"
@@ -452,39 +452,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/userinfo": {
-            "get": {
-                "security": [
-                    {
-                        "Bearer": []
-                    }
-                ],
-                "description": "Retrieve the profile of the current user",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Userinfo"
-                ],
-                "summary": "Get User Profile",
-                "operationId": "GetUserProfile",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/GenericResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Server or Database internal error",
-                        "schema": {
-                            "$ref": "#/definitions/GenericResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/userinfo/change-username": {
+        "/user/change-username": {
             "put": {
                 "security": [
                     {
@@ -507,7 +475,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/userinfo.UsernameChangeRequest"
+                            "$ref": "#/definitions/user.UsernameChangeRequest"
                         }
                     }
                 ],
@@ -527,7 +495,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/userinfo/follow": {
+        "/user/follow/{userId}": {
             "post": {
                 "security": [
                     {
@@ -545,13 +513,11 @@ const docTemplate = `{
                 "operationId": "FollowUser",
                 "parameters": [
                     {
-                        "description": "Info about user to follow",
-                        "name": "FollowRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/userinfo.FollowRequest"
-                        }
+                        "type": "string",
+                        "description": "ID of user to follow",
+                        "name": "userId",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -570,7 +536,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/userinfo/unfollow": {
+        "/user/unfollow/{userId}": {
             "post": {
                 "security": [
                     {
@@ -588,13 +554,11 @@ const docTemplate = `{
                 "operationId": "UnfollowUser",
                 "parameters": [
                     {
-                        "description": "Info about user to unfollow",
-                        "name": "FollowRequest",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/userinfo.FollowRequest"
-                        }
+                        "type": "string",
+                        "description": "ID of user to unfollow",
+                        "name": "userId",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -613,14 +577,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/userinfo/userprofile": {
+        "/user/{userId}": {
             "get": {
                 "security": [
                     {
                         "Bearer": []
                     }
                 ],
-                "description": "Get the User with the given ID",
+                "description": "Get the User with the given ID. If the ID is left empty, the currently logged in user is retrieved instead",
                 "produces": [
                     "application/json"
                 ],
@@ -634,7 +598,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "ID of the user to retrieve",
                         "name": "userId",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     }
                 ],
@@ -754,15 +718,7 @@ const docTemplate = `{
                 }
             }
         },
-        "userinfo.FollowRequest": {
-            "type": "object",
-            "properties": {
-                "to_follow_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "userinfo.UsernameChangeRequest": {
+        "user.UsernameChangeRequest": {
             "type": "object",
             "properties": {
                 "new_username": {
